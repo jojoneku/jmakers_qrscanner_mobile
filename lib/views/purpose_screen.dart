@@ -1,16 +1,19 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:jmaker_qrscanner_mobile/qr_scanner.dart';
+import 'package:jmaker_qrscanner_mobile/routes/app_router.gr.dart';
 import 'package:jmaker_qrscanner_mobile/styles/buttons.dart';
 import 'package:jmaker_qrscanner_mobile/styles/color.dart';
 import 'package:jmaker_qrscanner_mobile/styles/text_style.dart';
 
+@RoutePage()
+class PurposeAndServicesScreen extends StatefulWidget {
+  const PurposeAndServicesScreen({super.key});
 
-class PurposeAndServices extends StatefulWidget {
   @override
-  _PurposeAndServicesState createState() => _PurposeAndServicesState();
+  State<PurposeAndServicesScreen> createState() => _PurposeAndServicesScreenState();
 }
 
-class _PurposeAndServicesState extends State<PurposeAndServices> {
+class _PurposeAndServicesScreenState extends State<PurposeAndServicesScreen> {
   String? selectedPurpose;
   String? selectedService;
   String? selectedMachine;
@@ -59,27 +62,22 @@ class _PurposeAndServicesState extends State<PurposeAndServices> {
       String selectedMachineValue = selectedMachine!;
 
       // Navigate to the next page and pass data
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => QRScanner(
-            selectedPurpose: selectedPurposeValue,
-            selectedService: selectedServiceValue,
-            selectedMachine: selectedMachineValue,
-          ),
-        ),
-      );
+      context.router.push(QRScannerRoute(
+        selectedPurpose: selectedPurposeValue,
+        selectedService: selectedServiceValue,
+        selectedMachine: selectedMachineValue,
+      ));
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: mainYellow,
-        title: Text('Purpose and Services'),
+        title: const Text('Purpose and Services'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -92,8 +90,7 @@ class _PurposeAndServicesState extends State<PurposeAndServices> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Image.asset('assets/image/landingvector.png',
-              height: 350),
+              Image.asset('assets/image/landingvector.png', height: 350),
               DropdownButtonFormField<String>(
                 value: selectedPurpose,
                 hint: const Text('Select Purpose'),
@@ -109,7 +106,7 @@ class _PurposeAndServicesState extends State<PurposeAndServices> {
                   });
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               DropdownButtonFormField<String>(
                 value: selectedService,
                 hint: const Text('Select Service'),
@@ -125,7 +122,7 @@ class _PurposeAndServicesState extends State<PurposeAndServices> {
                   });
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               DropdownButtonFormField<String>(
                 value: selectedMachine,
                 hint: const Text('Select Machine to be Used'),
@@ -141,13 +138,13 @@ class _PurposeAndServicesState extends State<PurposeAndServices> {
                   });
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               if (errorText != null)
                 Text(
                   errorText!,
-                  style: TextStyle(color: Colors.red),
+                  style: const TextStyle(color: Colors.red),
                 ),
-              SizedBox(height: 32),
+              const SizedBox(height: 32),
               ElevatedButton(
                 style: selectedPurpose != null && selectedService != null && selectedMachine != null
                     ? longYellow // Yellow color when all dropdowns have selections
