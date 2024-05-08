@@ -3,6 +3,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:jmaker_qrscanner_mobile/controllers/firestore_controller.dart';
 import 'package:jmaker_qrscanner_mobile/models/maker_model.dart';
 import 'package:jmaker_qrscanner_mobile/models/student_model.dart';
@@ -113,7 +114,29 @@ class DataDisplayPageSyncfusionScreen extends StatelessWidget {
               );
             }
 
-            final UserDataSource userDataSource = UserDataSource(dataList: dataList);
+            dataList.sort((a, b) {
+              if (a.userData is MakerModel && b.userData is StudentModel) {
+                DateTime dateTimeA = DateFormat("MMMM d, yyyy h:mm a").parse((a.userData as MakerModel).dateTime ?? '');
+                DateTime dateTimeB = DateFormat("MMMM d, yyyy h:mm a").parse((b.userData as StudentModel).dateTime ?? '');
+                return dateTimeA.compareTo(dateTimeB);
+              } else if (a.userData is StudentModel && b.userData is MakerModel) {
+                DateTime dateTimeA = DateFormat("MMMM d, yyyy h:mm a").parse((a.userData as StudentModel).dateTime ?? '');
+                DateTime dateTimeB = DateFormat("MMMM d, yyyy h:mm a").parse((b.userData as MakerModel).dateTime ?? '');
+                return dateTimeA.compareTo(dateTimeB);
+              } else if (a.userData is StudentModel && b.userData is StudentModel) {
+                DateTime dateTimeA = DateFormat("MMMM d, yyyy h:mm a").parse((a.userData as StudentModel).dateTime ?? '');
+                DateTime dateTimeB = DateFormat("MMMM d, yyyy h:mm a").parse((b.userData as StudentModel).dateTime ?? '');
+                return dateTimeA.compareTo(dateTimeB);
+              } else if (a.userData is MakerModel && b.userData is MakerModel) {
+                DateTime dateTimeA = DateFormat("MMMM d, yyyy h:mm a").parse((a.userData as MakerModel).dateTime ?? '');
+                DateTime dateTimeB = DateFormat("MMMM d, yyyy h:mm a").parse((b.userData as MakerModel).dateTime ?? '');
+                return dateTimeA.compareTo(dateTimeB);
+              } else {
+                return a.userData.runtimeType.toString().compareTo(b.userData.runtimeType.toString());
+              }
+            });
+
+            final UserDataSource userDataSource = UserDataSource(dataList: dataList.reversed.toList());
             return ListView(
               padding: const EdgeInsets.only(left: 16.0, top: 16, right: 16),
               children: [
@@ -168,33 +191,34 @@ class DataDisplayPageSyncfusionScreen extends StatelessWidget {
                       ),
                     ),
                     GridColumn(
-                        columnName: 'purpose',
-                        label: Container(
-                            padding: const EdgeInsets.all(8.0),
-                            alignment: Alignment.centerLeft,
-                            child: const Text(
-                              'Purpose',
-                            ))),
+                      columnName: 'purpose',
+                      label: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        alignment: Alignment.centerLeft,
+                        child: const Text(
+                          'Purpose',
+                        ),
+                      ),
+                    ),
                     GridColumn(
-                        columnName: 'service',
-                        label: Container(padding: const EdgeInsets.all(8.0), alignment: Alignment.centerLeft, child: const Text('Service'))),
+                      columnName: 'service',
+                      label: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        alignment: Alignment.centerLeft,
+                        child: const Text('Service'),
+                      ),
+                    ),
                     GridColumn(
-                        columnName: 'machine',
-                        label: Container(
-                            padding: const EdgeInsets.all(8.0),
-                            alignment: Alignment.centerLeft,
-                            child: const Text(
-                              'Machine',
-                              overflow: TextOverflow.ellipsis,
-                            ))),
-
-                    //               DataGridCell<String>(columnName: 'affiliation', value: (data.userData as MakerModel).affiliation),
-                    // DataGridCell<String>(columnName: 'contact number', value: (data.userData as MakerModel).contactNumber),
-                    // DataGridCell<String>(columnName: 'user type', value: (data.userData as MakerModel).userType),
-                    // DataGridCell<String>(columnName: 'company name', value: (data.userData as MakerModel).companyName),
-                    // DataGridCell<String>(columnName: 'email', value: (data.userData as MakerModel).email),
-                    // DataGridCell<String>(columnName: 'gender', value: (data.userData as MakerModel).gender),
-                    // DataGridCell<String>(columnName: 'minority', valu
+                      columnName: 'machine',
+                      label: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        alignment: Alignment.centerLeft,
+                        child: const Text(
+                          'Machine',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ),
                     GridColumn(
                       columnName: 'student id/affiliation',
                       columnWidthMode: ColumnWidthMode.fitByCellValue,
