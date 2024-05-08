@@ -1,14 +1,11 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:jmaker_qrscanner_mobile/attendanceList.dart';
+import 'package:jmaker_qrscanner_mobile/attendance_List_Syncfusion.dart';
 import 'package:jmaker_qrscanner_mobile/styles/buttons.dart';
 import 'package:jmaker_qrscanner_mobile/styles/color.dart';
 import 'package:jmaker_qrscanner_mobile/styles/text_style.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'purposePage.dart';
 
 class QRScanner extends StatefulWidget {
   final String selectedPurpose;
@@ -29,6 +26,18 @@ class _QRScannerState extends State<QRScanner> {
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (ModalRoute.of(context)!.isCurrent) {
+      // Resume the camera if this page is the current route
+      controller?.resumeCamera();
+    } else {
+      // Pause the camera if this page is not the current route
+      controller?.pauseCamera();
+    }
+  }
 
   @override
   void reassemble() {
@@ -85,18 +94,27 @@ class _QRScannerState extends State<QRScanner> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => DataDisplayPage(
-                                    collectedData: CollectedData(
-                                      purpose: widget.selectedPurpose,
-                                      service: widget.selectedService,
-                                      machine: widget.selectedMachine,
-                                      qrData: result!.code!,
-                                    ),
-                                  ),
+                                  builder: (context) =>
+                                      DataDisplayPageSyncfusion(
+                                        dataList: [
+                                          CollectedUserData(
+                                            purpose: widget.selectedPurpose,
+                                            service: widget.selectedService,
+                                            machine: widget.selectedMachine,
+                                            qrData: result!.code!,
+                                          )
+                                        ], collectedData: CollectedUserData(
+                                          purpose: widget.selectedPurpose,
+                                          service: widget.selectedService,
+                                          machine: widget.selectedMachine,
+                                          qrData: result!.code!,
+                                      ),
                                 ),
+                                )
                               );
                             }
-                                : null, // Disable button if result is null
+                                : null,
+                            // Disable button if result is null
                             child: Text(
                               'Record Attendance',
                               style: CustomTextStyle.primaryWhite,
@@ -148,7 +166,8 @@ class _QRScannerState extends State<QRScanner> {
   }
 
   Widget _buildQrView(BuildContext context) {
-    var scanArea = (MediaQuery.of(context).size.width < 400 || MediaQuery.of(context).size.height < 400)
+    var scanArea = (MediaQuery.of(context).size.width < 400 ||
+        MediaQuery.of(context).size.height < 400)
         ? 150.0
         : 300.0;
     return QRView(
