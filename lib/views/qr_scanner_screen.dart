@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -10,11 +11,11 @@ import 'package:jmaker_qrscanner_mobile/controllers/firestore_controller.dart';
 import 'package:jmaker_qrscanner_mobile/controllers/snackbar_controller.dart';
 import 'package:jmaker_qrscanner_mobile/models/maker_model.dart';
 import 'package:jmaker_qrscanner_mobile/models/student_model.dart';
-import 'package:jmaker_qrscanner_mobile/utils/encryt_utils.dart';
 import 'package:jmaker_qrscanner_mobile/routes/app_router.gr.dart';
 import 'package:jmaker_qrscanner_mobile/styles/buttons.dart';
 import 'package:jmaker_qrscanner_mobile/styles/color.dart';
 import 'package:jmaker_qrscanner_mobile/styles/text_style.dart';
+import 'package:jmaker_qrscanner_mobile/utils/encryt_utils.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 @RoutePage()
@@ -192,29 +193,35 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          style: yellowPrimary,
-                          onPressed: () async {
-                            await controller?.pauseCamera();
-                          },
-                          child: Text(
-                            'Pause',
-                            style: CustomTextStyle.primaryBlack,
+                      Expanded(
+                        flex: 1,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedButton(
+                            style: yellowPrimary,
+                            onPressed: () async {
+                              await controller?.pauseCamera();
+                            },
+                            child: Text(
+                              'Pause',
+                              style: CustomTextStyle.primaryBlack,
+                            ),
                           ),
                         ),
                       ),
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          style: yellowPrimary,
-                          onPressed: () async {
-                            await controller?.resumeCamera();
-                          },
-                          child: Text(
-                            'Resume',
-                            style: CustomTextStyle.primaryBlack,
+                      Expanded(
+                        flex: 1,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedButton(
+                            style: yellowPrimary,
+                            onPressed: () async {
+                              await controller?.resumeCamera();
+                            },
+                            child: Text(
+                              'Resume',
+                              style: CustomTextStyle.primaryBlack,
+                            ),
                           ),
                         ),
                       )

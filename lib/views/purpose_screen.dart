@@ -27,14 +27,15 @@ class _PurposeAndServicesScreenState extends State<PurposeAndServicesScreen> {
     "Personal DIY",
     "Community Project",
     "Company/Org. Event",
+    "Others",
   ];
 
   List<String> serviceOptions = [
     "Digital Fabrication",
     "Design Development/Consultation",
-    "Project Development/Prototyping",
-    "Workshop Training",
-    "Benchmark",
+    "Product Development/Prototyping",
+    "Workshop/Training",
+    "Benchmark & Tours",
   ];
 
   List<String> machineOptions = [
@@ -88,57 +89,63 @@ class _PurposeAndServicesScreenState extends State<PurposeAndServicesScreen> {
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Image.asset('assets/image/landingvector.png', height: 350),
-              DropdownButtonFormField<String>(
-                value: selectedPurpose,
-                hint: const Text('Select Purpose'),
-                items: purposeOptions.map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    selectedPurpose = value;
-                  });
-                },
+              const SizedBox(height: 32),
+              Image.asset('assets/image/landingvector.png', height: 200),
+              const SizedBox(height: 32),
+              Column(
+                children: [
+                  DropdownButtonFormField<String>(
+                    value: selectedPurpose,
+                    hint: const Text('Select Purpose'),
+                    items: purposeOptions.map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedPurpose = value;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                  DropdownButtonFormField<String>(
+                    value: selectedService,
+                    hint: const Text('Select Service'),
+                    items: serviceOptions.map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedService = value;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                  DropdownButtonFormField<String>(
+                    value: selectedMachine,
+                    hint: const Text('Select Machine to be Used'),
+                    items: machineOptions.map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedMachine = value;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                ],
               ),
-              const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                value: selectedService,
-                hint: const Text('Select Service'),
-                items: serviceOptions.map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    selectedService = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                value: selectedMachine,
-                hint: const Text('Select Machine to be Used'),
-                items: machineOptions.map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    selectedMachine = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 16),
               if (errorText != null)
                 Text(
                   errorText!,

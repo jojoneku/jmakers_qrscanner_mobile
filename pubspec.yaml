@@ -1,6 +1,6 @@
 name: jmaker_qrscanner_mobile
-description: "A desktop application for the qrcode scanner."
-version: 1.0.0+1
+description: "A mobile application for the qrcode scanner."
+version: 1.5.0+1
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
@@ -26,7 +26,7 @@ dependencies:
   freezed: ^2.5.2
   freezed_annotation: ^2.4.1
   mvc_pattern: ^8.12.0
-  intl: ^0.18.1
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:
@@ -34,6 +34,7 @@ dev_dependencies:
   flutter_lints: ^3.0.0
   auto_route_generator: ^8.0.0
   build_runner: ^2.4.9
+  flutter_launcher_icons: "^0.13.1"
 
 flutter:
   uses-material-design: true

@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:io'; // Import File from dart:io
+
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +14,6 @@ import 'package:jmaker_qrscanner_mobile/styles/color.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:syncfusion_flutter_datagrid_export/export.dart';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart' hide Column, Row;
-import 'dart:io'; // Import File from dart:io
 
 class CollectedUserData {
   final String purpose;
@@ -41,8 +42,18 @@ class DataDisplayPageSyncfusionScreen extends StatelessWidget {
       final Workbook workbook = _key.currentState!.exportToExcelWorkbook();
       final List<int> bytes = workbook.saveAsStream();
 
-      // Get the directory for saving files on the device
-      const String filePath = '/storage/emulated/0/Download/DataGrid.xlsx';
+      // Get the current date and time
+      final now = DateTime.now();
+
+      // Format date (YYYY-MM-DD)
+      final dateString = DateFormat('yyyy-MM-dd').format(now);
+
+      // Format time with periods (hh.mmAM/PM)
+      final timeString = DateFormat('hh.mm').format(now);
+      final amPm = now.hour >= 12 ? 'PM' : 'AM';
+
+      // Construct the file path with timestamp
+      final filePath = '/storage/emulated/0/Download/JMakers_$dateString-${timeString}$amPm.xlsx';
 
       // Write the Excel file
       final file = File(filePath);
@@ -60,6 +71,7 @@ class DataDisplayPageSyncfusionScreen extends StatelessWidget {
       ));
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -137,154 +149,175 @@ class DataDisplayPageSyncfusionScreen extends StatelessWidget {
             });
 
             final UserDataSource userDataSource = UserDataSource(dataList: dataList.reversed.toList());
-            return ListView(
-              padding: const EdgeInsets.only(left: 16.0, top: 16, right: 16),
-              children: [
-                Row(
-                  children: [
-                    SizedBox(
-                      height: 40.0,
-                      width: 150.0,
-                      child: MaterialButton(
-                        color: blackGreen,
-                        onPressed: () {
-                          exportDataGridToExcel(context);
-                        },
-                        child: const Center(
-                          child: Text(
-                            'Export to Excel',
-                            style: TextStyle(color: Colors.white),
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 32),
+              child: ListView(
+                scrollDirection: Axis.vertical,
+                padding: const EdgeInsets.only(left: 16.0, top: 16, right: 16),
+                children: [
+                  Row(
+                    children: [
+                      SizedBox(
+                        height: 40.0,
+                        width: 150.0,
+                        child: MaterialButton(
+                          color: blackGreen,
+                          onPressed: () {
+                            exportDataGridToExcel(context);
+                          },
+                          child: const Center(
+                            child: Text(
+                              'Export to Excel',
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                SfDataGrid(
-                  key: _key,
-                  allowSorting: true,
-                  allowPullToRefresh: true,
-                  headerRowHeight: 80,
-                  showHorizontalScrollbar: true,
-                  showVerticalScrollbar: true,
-                  source: userDataSource,
-                  columnWidthMode: ColumnWidthMode.fill,
-                  allowColumnsResizing: true,
-                  columnResizeMode: ColumnResizeMode.onResize,
-                  columns: <GridColumn>[
-                    GridColumn(
-                      columnName: 'name',
-                      columnWidthMode: ColumnWidthMode.fitByCellValue,
-                      label: Container(
-                        padding: const EdgeInsets.all(8.0),
-                        alignment: Alignment.centerLeft,
-                        child: const Text('Full Name'),
-                      ),
-                    ),
-                    GridColumn(
-                      columnName: 'datetime',
-                      columnWidthMode: ColumnWidthMode.fitByCellValue,
-                      label: Container(
-                        padding: const EdgeInsets.all(8.0),
-                        alignment: Alignment.centerLeft,
-                        child: const Text('Date and Time'),
-                      ),
-                    ),
-                    GridColumn(
-                      columnName: 'purpose',
-                      label: Container(
-                        padding: const EdgeInsets.all(8.0),
-                        alignment: Alignment.centerLeft,
-                        child: const Text(
-                          'Purpose',
+                    ],
+                  ),
+                  SingleChildScrollView(
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height,
+                      child:
+                        SfDataGrid(
+                          key: _key,
+                          allowSorting: true,
+                          allowPullToRefresh: true,
+                          headerRowHeight: 80,
+                          rowHeight: 60,
+                          rowsPerPage: 30,
+                          showHorizontalScrollbar: true,
+                          showVerticalScrollbar: true,
+                          source: userDataSource,
+                          columnWidthMode: ColumnWidthMode.fill,
+                          columns: <GridColumn>[
+                            GridColumn(
+                              columnName: 'name',
+                              columnWidthMode: ColumnWidthMode.fitByColumnName,
+                              label: Container(
+                                padding: const EdgeInsets.all(8.0),
+                                alignment: Alignment.centerLeft,
+                                child: const Text('Full Name'),
+                              ),
+                            ),
+                            GridColumn(
+                              columnName: 'datetime',
+                              columnWidthMode: ColumnWidthMode.fitByColumnName,
+                              label: Container(
+                                padding: const EdgeInsets.all(8.0),
+                                alignment: Alignment.centerLeft,
+                                child: const Text('Date and Time'),
+                              ),
+                            ),
+                            GridColumn(
+                              columnName: 'purpose',
+                              columnWidthMode: ColumnWidthMode.fitByColumnName,
+                              label: Container(
+                                padding: const EdgeInsets.all(8.0),
+                                alignment: Alignment.centerLeft,
+                                child: const Text(
+                                  'Purpose',
+                                ),
+                              ),
+                            ),
+                            GridColumn(
+                              columnName: 'service',
+                              columnWidthMode: ColumnWidthMode.fitByColumnName,
+                              label: Container(
+                                padding: const EdgeInsets.all(8.0),
+                                alignment: Alignment.centerLeft,
+                                child: const Text('Service'),
+                              ),
+                            ),
+                            GridColumn(
+                              columnName: 'machine',
+                              columnWidthMode: ColumnWidthMode.fitByColumnName,
+                              label: Container(
+                                padding: const EdgeInsets.all(8.0),
+                                alignment: Alignment.centerLeft,
+                                child: const Text(
+                                  'Machine',
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                            GridColumn(
+                              columnName: 'student id/affiliation',
+                              visible: false,
+                              columnWidthMode: ColumnWidthMode.auto,
+                              label: Container(
+                                padding: const EdgeInsets.all(8.0),
+                                alignment: Alignment.centerLeft,
+                                child: const Text('Student ID/Affiliation'),
+                              ),
+                            ),
+                            GridColumn(
+                              columnName: 'contact number',
+                              visible: false,
+                              columnWidthMode: ColumnWidthMode.auto,
+                              label: Container(
+                                padding: const EdgeInsets.all(8.0),
+                                alignment: Alignment.centerLeft,
+                                child: const Text('Contact Number'),
+                              ),
+                            ),
+                            GridColumn(
+                              visible: false,
+                              columnName: 'company name/academic program',
+                              columnWidthMode: ColumnWidthMode.auto,
+                              label: Container(
+                                padding: const EdgeInsets.all(8.0),
+                                alignment: Alignment.centerLeft,
+                                child: const Text('Company Name/Academic Program'),
+                              ),
+                            ),
+                            GridColumn(
+                              visible: false,
+                              columnName: 'user type/academe',
+                              columnWidthMode: ColumnWidthMode.auto,
+                              label: Container(
+                                padding: const EdgeInsets.all(8.0),
+                                alignment: Alignment.centerLeft,
+                                child: const Text('User Type/Academe'),
+                              ),
+                            ),
+                            GridColumn(
+                              visible: false,
+                              columnName: 'email',
+                              columnWidthMode: ColumnWidthMode.fitByCellValue,
+                              label: Container(
+                                padding: const EdgeInsets.all(8.0),
+                                alignment: Alignment.centerLeft,
+                                child: const Text('Email'),
+                              ),
+                            ),
+                            GridColumn(
+                              visible: false,
+                              columnName: 'gender',
+                              columnWidthMode: ColumnWidthMode.auto,
+                              label: Container(
+                                padding: const EdgeInsets.all(8.0),
+                                alignment: Alignment.centerLeft,
+                                child: const Text('Gender'),
+                              ),
+                            ),
+                            GridColumn(
+                              visible: false,
+                              columnName: 'minority',
+                              columnWidthMode: ColumnWidthMode.auto,
+                              label: Container(
+                                padding: const EdgeInsets.all(8.0),
+                                alignment: Alignment.centerLeft,
+                                child: const Text('Minority'),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
                     ),
-                    GridColumn(
-                      columnName: 'service',
-                      label: Container(
-                        padding: const EdgeInsets.all(8.0),
-                        alignment: Alignment.centerLeft,
-                        child: const Text('Service'),
-                      ),
-                    ),
-                    GridColumn(
-                      columnName: 'machine',
-                      label: Container(
-                        padding: const EdgeInsets.all(8.0),
-                        alignment: Alignment.centerLeft,
-                        child: const Text(
-                          'Machine',
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ),
-                    GridColumn(
-                      columnName: 'student id/affiliation',
-                      columnWidthMode: ColumnWidthMode.fitByCellValue,
-                      label: Container(
-                        padding: const EdgeInsets.all(8.0),
-                        alignment: Alignment.centerLeft,
-                        child: const Text('Student ID/Affiliation'),
-                      ),
-                    ),
-                    GridColumn(
-                      columnName: 'contact number',
-                      columnWidthMode: ColumnWidthMode.fitByCellValue,
-                      label: Container(
-                        padding: const EdgeInsets.all(8.0),
-                        alignment: Alignment.centerLeft,
-                        child: const Text('Contact Number'),
-                      ),
-                    ),
-                    GridColumn(
-                      columnName: 'company name/academic program',
-                      columnWidthMode: ColumnWidthMode.fitByCellValue,
-                      label: Container(
-                        padding: const EdgeInsets.all(8.0),
-                        alignment: Alignment.centerLeft,
-                        child: const Text('Company Name/Academic Program'),
-                      ),
-                    ),
-                    GridColumn(
-                      columnName: 'user type/academe',
-                      columnWidthMode: ColumnWidthMode.fitByCellValue,
-                      label: Container(
-                        padding: const EdgeInsets.all(8.0),
-                        alignment: Alignment.centerLeft,
-                        child: const Text('User Type/Academe'),
-                      ),
-                    ),
-                    GridColumn(
-                      columnName: 'email',
-                      columnWidthMode: ColumnWidthMode.fitByCellValue,
-                      label: Container(
-                        padding: const EdgeInsets.all(8.0),
-                        alignment: Alignment.centerLeft,
-                        child: const Text('Email'),
-                      ),
-                    ),
-                    GridColumn(
-                      columnName: 'gender',
-                      columnWidthMode: ColumnWidthMode.fitByCellValue,
-                      label: Container(
-                        padding: const EdgeInsets.all(8.0),
-                        alignment: Alignment.centerLeft,
-                        child: const Text('gender'),
-                      ),
-                    ),
-                    GridColumn(
-                      columnName: 'minority',
-                      columnWidthMode: ColumnWidthMode.fitByCellValue,
-                      label: Container(
-                        padding: const EdgeInsets.all(8.0),
-                        alignment: Alignment.centerLeft,
-                        child: const Text('Minority'),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                  ),
+                  SizedBox(height: 32),
+                ],
+              ),
             );
           }),
       floatingActionButton: Align(
@@ -292,12 +325,13 @@ class DataDisplayPageSyncfusionScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: FloatingActionButton(
+            shape: CircleBorder(),
             onPressed: () {
               context.router.push(const PurposeAndServicesRoute());
             },
             backgroundColor: Colors.amber,
             child: const Icon(
-              Icons.add,
+              Icons.qr_code_scanner_outlined,
             ),
           ),
         ),

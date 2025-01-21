@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:jmaker_qrscanner_mobile/styles/color.dart';
+
 import 'text_style.dart';
 
 final ButtonStyle yellowPrimary = ElevatedButton.styleFrom(
-  minimumSize: const Size(190, 48),
+  minimumSize: const Size(140, 48),
   backgroundColor: mainYellow,
   elevation: 1,
 );
 
 final ButtonStyle BlackPrimary = ElevatedButton.styleFrom(
-  minimumSize: const Size(700, 48),
+  minimumSize: const Size(300, 48),
   backgroundColor: blackGreen,
   elevation: 1,
 );
 
 final ButtonStyle blackSecondary = ElevatedButton.styleFrom(
-  minimumSize: const Size(400, 48),
+  minimumSize: const Size(350, 48),
   backgroundColor: blackGreen,
   elevation: 1,
 );
